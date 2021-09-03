@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -26,8 +27,15 @@ func GetJwtPayloadFromCtx(ctx context.Context, opts ...string) (*JwtPayload, err
 		return nil, errors.New("get jwt payload from context error")
 	}
 	payloadStr := tr.RequestHeader().Get(key)
+	if len(payloadStr) == 0 {
+		return nil, errors.New("payload is empty ")
+	}
+	payloadBytes, err := base64.StdEncoding.DecodeString(payloadStr)
+	if err != nil {
+		return nil, fmt.Errorf("payload decode error: %s", err.Error())
+	}
 	var payload JwtPayload
-	if err := json.Unmarshal([]byte(payloadStr), &payload); err != nil {
+	if err := json.Unmarshal(payloadBytes, &payload); err != nil {
 		return nil, fmt.Errorf("unmarshal payload error: %s", err.Error())
 	}
 	return &payload, nil
