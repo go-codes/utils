@@ -1,4 +1,4 @@
-module utils
+module github.com/go-codes/utils
 
 go 1.16
 
