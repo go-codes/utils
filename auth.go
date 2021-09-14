@@ -30,7 +30,7 @@ func GetJwtPayloadFromCtx(ctx context.Context, opts ...string) (*JwtPayload, err
 	if len(payloadStr) == 0 {
 		return nil, errors.New("payload is empty ")
 	}
-	payloadBytes, err := base64.URLEncoding.DecodeString(payloadStr)
+	payloadBytes, err := base64.RawURLEncoding.DecodeString(payloadStr)
 	if err != nil {
 		return nil, fmt.Errorf("payload decode error: %s", err.Error())
 	}
